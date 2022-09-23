@@ -17,3 +17,16 @@ func MSE(yReal, yPredicted [][]float64) float64 {
 func RMSE(yReal, yPredicted [][]float64) float64 {
 	return math.Sqrt(MSE(yReal, yPredicted))
 }
+
+func MAE(yReal, yPredicted [][]float64) float64 {
+	real := matrix.AsMatrix(yReal)
+	predicted := matrix.AsMatrix(yPredicted)
+
+	return real.Subtract(predicted).Apply(func(x matrix.Col) matrix.Col {
+		if x < 0 {
+			return -x
+		}
+		return x
+	}).Mean()
+
+}
