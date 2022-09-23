@@ -60,3 +60,11 @@ func (bgd *BGDRegressor) Predict(x [][]float64) ([][]float64, error) {
 
 	return X.Dot(bgd.theta).ToArray(), nil
 }
+
+func (bgd *BGDRegressor) Intercept() float64 {
+	return bgd.intercept
+}
+
+func (bgd *BGDRegressor) Coef() []float64 {
+	return bgd.coef
+}
