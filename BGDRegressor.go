@@ -1,6 +1,13 @@
 package GDRegressor
 
-import "github.com/sschrs/matrix"
+import (
+	"errors"
+	"github.com/sschrs/matrix"
+)
+
+var (
+	notFittedError = errors.New("you have to fit the model before predict")
+)
 
 type BGDRegressor struct {
 	Iterations     int
@@ -41,4 +48,15 @@ func (bgd *BGDRegressor) Fit(x, y [][]float64) *BGDRegressor {
 	bgd.fitted = true
 
 	return bgd
+}
+
+func (bgd *BGDRegressor) Predict(x [][]float64) ([][]float64, error) {
+	if !bgd.fitted {
+		return nil, notFittedError
+	}
+
+	X := matrix.AsMatrix(x)
+	X = X.JoinColumn(matrix.GenerateColumn(len(x), 1), 0)
+
+	return X.Dot(bgd.theta).ToArray(), nil
 }
