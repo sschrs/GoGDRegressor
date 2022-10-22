@@ -32,7 +32,7 @@ func (sgd *SGDRegressor) Fit(x, y [][]float64) *SGDRegressor {
 
 	X = X.JoinColumn(matrix.GenerateColumn(len(x), 1), 0)
 
-	sgd.theta = matrix.GenerateRand(X.Shape()["cols"], 1).Divide(10)
+	theta := matrix.GenerateRand(X.Shape()["cols"], 1).Divide(10)
 
 	for i := 0; i < sgd.Iterations; i++ {
 		for j := 0; j < len(sgd.x); j++ {
@@ -41,19 +41,20 @@ func (sgd *SGDRegressor) Fit(x, y [][]float64) *SGDRegressor {
 			xi := X[random_index : random_index+1]
 			yi := Y[random_index : random_index+1]
 
-			gradient := xi.T().Dot(xi.Dot(sgd.theta).Subtract(yi)).Multiply(2)
+			gradient := xi.T().Dot(xi.Dot(theta).Subtract(yi)).Multiply(2)
 			sgd.Eta = learning_schedule(sgd.Eta)
-			sgd.theta = sgd.theta.Subtract(gradient.Multiply(sgd.Eta))
+			theta = theta.Subtract(gradient.Multiply(sgd.Eta))
 		}
 	}
 	sgd.fitted = true
-	sgd.intercept = float64(sgd.theta[0][0])
-
+	sgd.intercept = float64(theta[0][0])
+	sgd.theta = theta
 	var coef []float64
 	for i := 1; i < len(sgd.theta); i++ {
 		coef = append(coef, float64(sgd.theta[i][0]))
 	}
 
+	sgd.coef = coef
 	return sgd
 }
 
