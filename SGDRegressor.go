@@ -57,6 +57,10 @@ func (sgd *SGDRegressor) Fit(x, y [][]float64) *SGDRegressor {
 	return sgd
 }
 
+func (sgd *SGDRegressor) Coef() []float64 {
+	return sgd.coef
+}
+
 func (sgd *SGDRegressor) Intercept() float64 {
 	return sgd.intercept
 }
